@@ -1,0 +1,14 @@
+version: '3'
+services:
+  # web:
+  #   image: streaming/backend
+  #   volumes:
+  #     - ./src:/app/src
+  #   links:
+  #     - redis
+  #   ports:
+  #     - 3000:3000
+  redis:
+    image: redis
+    ports:
+      - 6379:6379
