@@ -8,6 +8,7 @@ export class Card {
 }
 
 export const parseToCard: (movie) => Card  = (movie) => ({
+  id: movie.ids.trakt,
   type: 'MOVIE',
   title: movie.title,
   subtitle: '' + movie.year,

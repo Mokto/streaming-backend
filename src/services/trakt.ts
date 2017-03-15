@@ -37,6 +37,28 @@ export class Trakt {
 
   }
 
+  public getMovieDetails(id: string, callback) {
+    let movie: any = {};
+    async.parallel([
+      (cb) => {
+        trakt.movies.summary({ id, extended: 'full' }).then((m) => {
+          movie = {...movie, ...m};
+          // console.log(movie);
+          cb();
+        });
+      },
+    ], (err) => {
+      this.imagesService.getImage('movie', movie.ids, (images) => {
+        movie = {
+          ...movie,
+          ...images,
+        };
+        callback(movie);
+      });
+    });
+
+  }
+
   private formatMovies(movies: any[]) {
     return movies.map(movie => {
       if (movie.movie) {

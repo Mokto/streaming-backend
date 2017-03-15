@@ -26,6 +26,19 @@ export class ImagesService {
       });
     });
   }
+  public mapImage(type: string, content: any): Promise<any> {
+
+    return new Promise<any>((resolve, reject) => {
+      console.log('\x1b[35m%s\x1b[0m', 'Getting image...');
+
+      this.getImage(type, content.ids, (image) => {
+        resolve({
+          ...content,
+          image: image.poster,
+        });
+      });
+    });
+  }
 
   public getImage(type, ids, cb) {
 
