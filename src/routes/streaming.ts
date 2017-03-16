@@ -1,38 +1,50 @@
 import { Route } from '../route';
 
+import { Streamer } from '../services/streamer';
+
 import * as cheerio from 'cheerio';
 import * as fs from 'fs';
 import * as request from 'request';
 import * as wget from 'wget-improved';
 
 export default class Streaming extends Route {
+  private streamer = new Streamer();
+
   public init (): void {
+    this.socket.on('streaming:get-link', (imdbId, callback) => {
 
-    this.socket.on('stream', (imdbId, callback) => {
-      console.log(imdbId);
+      imdbId = 'tt1355644';
 
-      getTorrentFromImdbId(imdbId, (torrent) => {
+      const torrent = this.streamer.getLink(imdbId)
+          .then(link => console.log('streaming route', link))
+          .catch(reason => console.log(reason));
 
-        const output = './torrents/' + imdbId + '.torrent';
 
-        wget.download(torrent.url, output).on('end', function() {
+      // this.torrent.getAllTorrents(imdbId, (torrent) => {
+      //   callback('got torrent');
 
-          upload(output, function() {
-            getFile(torrent, (links) => {
-              console.log(links);
-              links.forEach(link => {
-                downloadFile(link, (uptoboxLink) => {
-                  debrid(uptoboxLink, (link) => {
-                    callback(link);
-                    console.log(link);
-                  });
-                });
-              });
-            });
-          });
+      //   const output = './torrents/' + imdbId + '.torrent';
 
-        });
-      });
+      //   wget.download(torrent.url, output).on('end', function() {
+
+      //     upload(output, function() {
+      //       getFile(torrent, (links) => {
+
+      //         callback('links ok');
+      //         console.log(links);
+      //         links.forEach(link => {
+      //           downloadFile(link, (uptoboxLink) => {
+      //             debrid(uptoboxLink, (link) => {
+      //               callback(link);
+      //               console.log(link);
+      //             });
+      //           });
+      //         });
+      //       });
+      //     });
+
+      //   });
+      // });
     });
   }
 }
@@ -43,7 +55,7 @@ const torrentLink = 'https://yts.ag/torrent/download/298400F2032241DAB34836BC216
 
 let baseRequest = request.defaults({
    headers: {
-      Cookie: 'uid=65f67b34ed12eaf3f943af8d',
+      Cookie: 'uid='+cookie,
   },
 });
 
@@ -156,122 +168,3 @@ const getTorrentFromImdbId = (imdbId, callback) => {
 
 });
 }
-/*
-console.log('starting phantomjs');
-var phantomjs = require('phantomjs-prebuilt')
-var program = phantomjs.exec('./phantomjs-script.js', torrentLink, cookie)
-program.stdout.pipe(process.stdout)
-program.stderr.pipe(process.stderr)
-program.on('exit', code => {
-  console.log('exited');
-  // do something on end
-})
-*/
-
-/*
-var request = require('request');
-*/
-
-/*
-var phantomjs = require('phantomjs-prebuilt')
-var webdriverio = require('webdriverio')
-var wdOpts = { desiredCapabilities: { browserName: 'phantomjs' } }
-var async = require('async');
-
-phantomjs.run('--webdriver=4444').then(program => {
-  console.log('running phantomjs')
-
-  let browser = webdriverio.remote(wdOpts).init()
-    .url('https://alldebrid.com/torrent/')
-    .getUrl()
-    .then(url => {
-      console.log(url);
-
-      browser = browser
-            .setCookie({name: 'uid', value: '65f67b34ed12eaf3f943af8d', domain: '.alldebrid.com'})
-            .getText('#top')
-            .then((title) => {
-              console.log(title);
-              program.kill();
-            }, err => {
-              console.log(err.seleniumStack.orgStatusMessage);
-              program.kill();
-            });
-
-    }, err => {
-      console.log(err);
-      program.kill();
-    });
-
-});
-*/
-
-/*
-const uploadTorrent = function(torrent) {
-
-  console.log(torrent);
-    // .url('https://alldebrid.com/api.php?action=info_user&login=moktoo&pw=abab1598&format=json')
-
-  phantomjs.run('--webdriver=4444').then(program => {
-    console.log('running phantomjs')
-    const browser = webdriverio.remote(wdOpts).init();
-
-    async.series([
-      (callback) => {
-        browser.url('https://alldebrid.com/torrent/')
-//            .setCookie({name: 'uid', value: '65f67b34ed12eaf3f943af8d', domain: '.alldebrid.com'})
-            .getText('#top').then(title => {
-
-            console.log('title', title);
-            callback();
-          });
-      }
-    ], () => {
-browser.url('https://alldebrid.com/torrent/')
-      .getText('#top').then(title => {
-
-         var allCookies = browser.getCookie()
-    console.log(allCookies);
-        console.log(title);
-
-        if (title.indexOf('Sign in')) {
-
-          browser.url('http://alldebrid.com/register/')
-          .getText('ul.login_form').then(title => {
-
-            console.log('SUBMIT');
-            browser.setValue('input.login_login', allDebridUsername);
-            browser.setValue('input.login_password', allDebridPassword);
-            browser.submitForm('#loginForm').then(() => {
-              console.log('done');
-
-         var allCookies = browser.getCookie().then(cookie => {
-           console.log('cookie', cookie);
-         });
-    console.log(allCookies);
-     var url = browser.getUrl().then((val) => {
-       console.log('val', val)
-     });
-    console.log(url);
-              browser
-                .url('https://alldebrid.com/torrent/')
-                .getText('#top').then(title => {
-                  console.log(title);
-                  program.kill();
-                });
-
-            });
-
-          });
-        }
-      });
-    });
-
-  });
-
-};
-
-uploadTorrent({
-  url: 'https://yts.ag/torrent/download/298400F2032241DAB34836BC2165C30788211C9F'
-});
-*/

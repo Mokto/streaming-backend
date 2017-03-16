@@ -3,15 +3,10 @@
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
-    "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve",
-    "allowJs": true,
     "importHelpers": true,
     "rootDir": "src",
-    "outDir": "build",
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "outDir": "build"
   },
   "include": [
     "src/**/*"
