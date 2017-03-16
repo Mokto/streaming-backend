@@ -1,3 +1,4 @@
+import { Route } from '../route';
 
 const cheerio = require('cheerio');
 const fs = require('fs');
@@ -6,9 +7,9 @@ const wget = require('wget-improved');
 
 
 
-export class Streaming {
-  public static INIT(socket: SocketIO.Socket): void {
-    socket.on('stream', (imdbId, callback) => {
+export default class Streaming extends Route {
+  public init (): void {
+    this.socket.on('stream', (imdbId, callback) => {
       console.log(imdbId);
 
       getTorrentFromImdbId(imdbId, (torrent) => {

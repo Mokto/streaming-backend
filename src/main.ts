@@ -1,10 +1,16 @@
 import * as domain from 'domain';
-import * as express from 'express';
-import { Server } from 'typescript-rest';
-
 import * as http from 'http';
+import * as fs from 'fs';
 import * as SocketIO from 'socket.io';
-import { Routes } from './routes';
+
+// import { Routes } from './routes';
+
+const routes = [];
+fs.readdirSync(__dirname + '/routes').forEach(function(file) {
+    const fileName = file.substr(0, file.indexOf('.'));
+    routes.push(require('./routes/' + fileName).default);
+});
+
 
 const createServer = () => {
 
@@ -12,8 +18,12 @@ const createServer = () => {
   const io: SocketIO.Server = SocketIO.listen(server);
 
   io.sockets.on('connection', (socket: SocketIO.Socket) => {
+
     console.log('\x1b[35m%s\x1b[0m', 'Client connected');
-    Routes.INIT(socket);
+    routes.forEach(Route => {
+      const route = new Route(socket);
+      route.init();
+    });
 
     socket.on('disconnect', () => {
       console.log('\x1b[32m%s\x1b[0m', 'Client disconnected');

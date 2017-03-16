@@ -1,22 +1,22 @@
-import SocketIo from 'socket.io';
+import { Route } from '../route';
 
-import { Trakt } from '../../services/trakt';
+import { Trakt } from '../services/trakt';
 
-const trakt: Trakt = new Trakt();
-trakt.getMovieDetails("moana-2016", (movie) => {
-  // console.log(movie);
-});
+// const trakt: Trakt = new Trakt();
+// trakt.getMovieDetails("moana-2016", (movie) => {
+//   // console.log(movie);
+// });
 
-export class Movies {
+export default class Movies extends Route {
 
-  private static trakt: Trakt = new Trakt();
+  private trakt: Trakt = new Trakt();
 
-  public static INIT(socket: SocketIO.Socket): void {
-    socket.on('movies', (data: IMovieRouteParams, callback) => {
+  public init(): void {
+    this.socket.on('movies', (data: IMovieRouteParams, callback) => {
       this.trakt.getMoviesByType(data, callback);
     });
 
-    socket.on('movie', (traktId, callback) => {
+    this.socket.on('movie', (traktId, callback) => {
       this.trakt.getMovieDetails(traktId, (movie) => {
 
         console.log(movie.images);
@@ -32,48 +32,6 @@ export class Movies {
           poster: movie.poster,
           background: movie.background,
 
-          // characters: [
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Leonardo Di Caprio',
-          //     localImageResource: 'face_01',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Gerald Butler',
-          //     localImageResource: 'face_08',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Russle Crow',
-          //     localImageResource: 'face_02',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Emma Stone',
-          //     localImageResource: 'face_03',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Natalie Portman',
-          //     localImageResource: 'face_04',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Jack Gyllanhall',
-          //     localImageResource: 'face_05',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Ryan Gossling',
-          //     localImageResource: 'face_06',
-          //   },
-          //   {
-          //     type: 'CHARACTER',
-          //     title: 'Olivia Wilde',
-          //     localImageResource: 'face_07',
-          //   },
-          // ],
           recommended: [
             {
               type: 'MOVIE',
