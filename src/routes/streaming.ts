@@ -1,14 +1,13 @@
 import { Route } from '../route';
 
-const cheerio = require('cheerio');
-const fs = require('fs');
-const request = require('request');
-const wget = require('wget-improved');
-
-
+import * as cheerio from 'cheerio';
+import * as fs from 'fs';
+import * as request from 'request';
+import * as wget from 'wget-improved';
 
 export default class Streaming extends Route {
   public init (): void {
+
     this.socket.on('stream', (imdbId, callback) => {
       console.log(imdbId);
 
@@ -38,8 +37,6 @@ export default class Streaming extends Route {
   }
 }
 
-const allDebridUsername = 'moktoo';
-const allDebridPassword = 'abab1598';
 const cookie = '65f67b34ed12eaf3f943af8d';
 const torrentLink = 'https://yts.ag/torrent/download/298400F2032241DAB34836BC2165C30788211C9F';
 

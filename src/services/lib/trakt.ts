@@ -1,7 +1,7 @@
 import * as Trakt from 'trakt.tv';
 import * as imagesPlugin from 'trakt.tv-images';
 
-import { CONFIG } from '../../config';
+import { CONFIG } from '../../config/credentials';
 
 export const trakt: Trakt = new Trakt({
   client_id: CONFIG.traktClientId,

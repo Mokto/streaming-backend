@@ -1,7 +1,7 @@
 import * as async from 'async';
 
+import { parseToDetailedCard } from '../model/card-detailed';
 import { parseToCard } from '../model/card';
-import { CardRow, parseToCardRow } from '../model/card-row';
 import { ImagesService } from './images';
 import { redis } from './lib/redis';
 import { trakt } from './lib/trakt';
@@ -53,7 +53,7 @@ export class Trakt {
           ...movie,
           ...images,
         };
-        callback(movie);
+        callback(parseToDetailedCard(movie));
       });
     });
 
